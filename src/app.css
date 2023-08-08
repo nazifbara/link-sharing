@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-base leading-[150%] text-contrast-base;
+  }
+}
+
+@layer components {
+  .heading-m, .heading-s {
+    @apply font-bold text-contrast-dark;
+  }
+
+  .heading-m {
+    font-size: 1.5rem;
+  }
+
+  .heading-s {
+    font-size: 1rem;
+  }
+
+  .body-m {
+    font-size: 1rem;
+  }
+
+  .body-s {
+    font-size: .75rem;
+  }
+
+  @media (min-width: 48rem) {
+    .heading-m {
+      font-size: 2rem;
+    }
+  }
+}
