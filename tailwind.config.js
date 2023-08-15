@@ -19,7 +19,14 @@ export default {
       border: '#D9D9D9',
       surface: '#FFFFFF',
     },
-    extend: {},
+    extend: {
+      boxShadow: {
+        base: '0 0 32px rgba(0, 0, 0, 0.1)',
+      },
+      dropShadow: {
+        primary: '0 0 32px rgba(99, 60, 225, 0.25)',
+      }
+    },
   },
   plugins: [],
 }

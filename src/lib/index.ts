@@ -1,5 +1,6 @@
+import PlatformField from './PlatformField.svelte';
 import Label from './Label.svelte';
 import TextField from './TextField.svelte';
-import Icon from './Icon.svelte';
+import * as icons from './icons';
 
-export { Label, TextField, Icon };
+export { PlatformField, Label, TextField, icons };

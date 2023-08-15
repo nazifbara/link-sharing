@@ -3,13 +3,18 @@
 	export let value = '';
 	export let placeholder = '';
 	export let variant: 'base' | 'error' = 'base';
-
-	let inputClass = `w-full input${variant !== 'base' ? `-${variant}` : ''}`;
 </script>
 
 <div>
 	<slot name="icon" />
-	<input {type} class:pl-11={$$slots.icon} class={inputClass} {value} {placeholder} />
+	<input
+		{type}
+		class:border-danger={variant === 'error'}
+		class:pl-11={$$slots.icon}
+		class="w-full input"
+		{value}
+		{placeholder}
+	/>
 	{#if variant === 'error'}
 		<slot name="error" />
 	{/if}

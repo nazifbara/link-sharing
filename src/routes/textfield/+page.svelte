@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TextField, Icon, Label } from '$lib';
+	import { TextField, icons, Label, PlatformField } from '$lib';
 </script>
 
 <div class="grid gap-6 p-6">
@@ -9,9 +9,9 @@
 		<span slot="error">Can't be empty</span>
 	</TextField>
 
-	<TextField placeholder="placeholder...">
+	<TextField placeholder="Placeholder...">
 		<svelte:fragment slot="icon">
-			<Icon name="link-header" />
+			<svelte:component this={icons.Link} />
 		</svelte:fragment>
 		<span slot="error">Can't be empty</span>
 	</TextField>
@@ -19,9 +19,11 @@
 	<Label variant="error" label="Email address">
 		<TextField variant="error" placeholder="email...">
 			<svelte:fragment slot="icon">
-				<Icon name="link-header" />
+				<svelte:component this={icons.Link} />
 			</svelte:fragment>
 			<span slot="error">Can't be empty</span>
 		</TextField>
 	</Label>
+
+	<PlatformField />
 </div>
