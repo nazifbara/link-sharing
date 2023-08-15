@@ -9,6 +9,31 @@
 }
 
 @layer components {
+  /* Button */
+
+  .btn {
+    @apply rounded-lg heading-s p-3 transition-colors;
+  }
+
+  .btn[disabled] {
+    @apply opacity-25 cursor-not-allowed;
+  }
+
+  .btn.variant-primary {
+    @apply text-surface bg-primary-base;
+  }
+
+  .btn.variant-primary:hover:not([disabled]) {
+    @apply bg-primary-hover;
+  }
+
+  .btn.variant-secondary {
+    @apply text-primary-base bg-transparent border border-primary-base;
+  }
+
+  .btn.variant-secondary:hover:not([disabled]) {
+    @apply bg-primary-light;
+  }
 
   /* Typography */
 
