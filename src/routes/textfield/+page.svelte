@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TextField, icons, Label, PlatformField } from '$lib';
+	import { TextField, icons, Label, PlatformField } from '$lib/components';
 </script>
 
 <div class="grid gap-6 p-6">
