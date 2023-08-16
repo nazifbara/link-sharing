@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let type: 'text' | 'email' = 'text';
+	export let type: 'text' | 'email' | 'password' = 'text';
 	export let value = '';
 	export let placeholder = '';
 	export let variant: 'base' | 'error' = 'base';

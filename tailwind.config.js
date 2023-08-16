@@ -5,6 +5,10 @@ export default {
 		fontFamily: {
 			base: ['Instrument Sans', 'sans-serif']
 		},
+		container: {
+			padding: '2rem',
+			center: true
+		},
 		extend: {
 			colors: {
 				primary: {
@@ -18,7 +22,8 @@ export default {
 					dark: '#333333'
 				},
 				border: '#D9D9D9',
-				surface: '#FFFFFF'
+				surface: '#FFFFFF',
+				body: '#FAFAFA'
 			},
 			boxShadow: {
 				base: '0 0 32px rgba(0, 0, 0, 0.1)'

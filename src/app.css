@@ -4,11 +4,17 @@
 
 @layer base {
   body {
-    @apply font-base leading-[150%] text-contrast-base;
+    @apply font-base leading-[150%] text-contrast-base bg-body;
   }
 }
 
 @layer components {
+  /* Link */
+
+  .link {
+    @apply text-primary-base;
+  }
+
   /* Button */
 
   .btn {
