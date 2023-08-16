@@ -1,20 +1,19 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
-	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 	import { LogoLarge, Email, Password } from '$lib/components/icons';
 	import { Label, TextField } from '$lib/components';
 
 	export let data: PageData;
-
-	const { form, errors, constraints } = superForm(data.form);
+	export let form: ActionData;
+	const { form: sForm, errors, constraints } = superForm(data.form);
+	const apiError = form?.apiError;
 </script>
 
 <div class="grid items-start pt-8 min-h-[100svh] md:content-center">
 	<div class="grid items-center gap-14 w-full max-w-[476px] mx-auto">
 		<LogoLarge />
-		<SuperDebug data={$form} />
 
 		<form method="POST" class=" rounded-xl md:p-10 md:bg-surface">
 			<h1 class="heading-m mb-4">Create account</h1>
@@ -26,7 +25,7 @@
 						name="email"
 						placeholder="e.g. alex@email.com"
 						variant={$errors.email && 'error'}
-						bind:value={$form.email}
+						bind:value={$sForm.email}
 						{...$constraints.email}
 					>
 						<svelte:fragment slot="icon">
@@ -47,7 +46,7 @@
 						type="password"
 						placeholder="At least 8 characters"
 						variant={$errors.password && 'error'}
-						bind:value={$form.password}
+						bind:value={$sForm.password}
 						{...$constraints.password}
 					>
 						<svelte:fragment slot="icon">
@@ -68,7 +67,7 @@
 						type="password"
 						placeholder="At least 8 characters"
 						variant={$errors.confirmPassword && 'error'}
-						bind:value={$form.confirmPassword}
+						bind:value={$sForm.confirmPassword}
 						{...$constraints.confirmPassword}
 					>
 						<svelte:fragment slot="icon">
@@ -83,11 +82,17 @@
 					</TextField>
 				</Label>
 
-				{#if $errors._errors}
+				{#if $errors._errors || apiError}
 					<ul class="text-danger">
-						{#each $errors._errors as error}
-							<li>{error}</li>
-						{/each}
+						{#if apiError}
+							<li>There was an error registering. Please try again.</li>
+						{/if}
+
+						{#if $errors._errors}
+							{#each $errors._errors as error}
+								<li>{error}</li>
+							{/each}
+						{/if}
 					</ul>
 				{/if}
 

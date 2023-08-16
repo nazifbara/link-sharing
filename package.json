@@ -41,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@melt-ui/svelte": "^0.34.3"
+		"@melt-ui/svelte": "^0.34.3",
+		"firebase": "^10.1.0"
 	}
 }

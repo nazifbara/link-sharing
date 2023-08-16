@@ -19,7 +19,7 @@
 		on:input={handleInput}
 		class:border-danger={variant === 'error'}
 		class:pl-11={$$slots.icon}
-		class="w-full input"
+		class="w-full input text-contrast-dark"
 	/>
 	{#if variant === 'error'}
 		<slot name="error" />
