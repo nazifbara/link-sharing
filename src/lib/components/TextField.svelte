@@ -1,19 +1,25 @@
 <script lang="ts">
 	export let type: 'text' | 'email' | 'password' = 'text';
 	export let value = '';
+	export let name = '';
 	export let placeholder = '';
-	export let variant: 'base' | 'error' = 'base';
+	export let variant: 'error' | undefined = undefined;
+
+	const handleInput = (e: any) => (value = e.target.value);
 </script>
 
 <div>
 	<slot name="icon" />
 	<input
+		{...$$restProps}
+		{name}
 		{type}
+		{value}
+		{placeholder}
+		on:input={handleInput}
 		class:border-danger={variant === 'error'}
 		class:pl-11={$$slots.icon}
 		class="w-full input"
-		{value}
-		{placeholder}
 	/>
 	{#if variant === 'error'}
 		<slot name="error" />
