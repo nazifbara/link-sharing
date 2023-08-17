@@ -7,7 +7,7 @@ import {
 	PUBLIC_FIREBASE_APP_ID
 } from '$env/static/public';
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 const firebaseConfig = {
 	apiKey: PUBLIC_FIREBASE_API_KEY,
@@ -25,6 +25,9 @@ if (!getApps().length) {
 }
 
 const firebaseAuth = getAuth(firebaseApp);
+
+export const login = async (email: string, password: string) =>
+	await signInWithEmailAndPassword(firebaseAuth, email, password);
 
 export const signUp = async (email: string, password: string) =>
 	await createUserWithEmailAndPassword(firebaseAuth, email, password);
