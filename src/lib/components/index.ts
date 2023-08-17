@@ -1,6 +1,5 @@
-import PlatformField from './PlatformField.svelte';
-import Label from './Label.svelte';
-import TextField from './TextField.svelte';
-import * as icons from './icons';
-
-export { PlatformField, Label, TextField, icons };
+export { default as AuthShell } from './AuthShell.svelte';
+export { default as PlatformField } from './PlatformField.svelte';
+export { default as Label } from './Label.svelte';
+export { default as TextField } from './TextField.svelte';
+export * as icons from './icons';
