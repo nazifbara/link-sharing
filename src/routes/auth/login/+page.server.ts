@@ -7,21 +7,29 @@ import { login } from '$lib/utils/client.js';
 export const load = async () => {
 	const form = await superValidate(loginSchema);
 
-	return { form, apiError: undefined };
+	return { form, apiError: undefined, user: undefined };
 };
 
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ request, cookies }) => {
 		const form = await superValidate(request, loginSchema);
 
 		if (!form.valid) {
-			return fail(400, { form, apiError: undefined });
+			return fail(400, { form, apiError: undefined, user: undefined });
 		}
 
 		try {
-			await login(form.data.email, form.data.password);
+			const { user } = await login(form.data.email, form.data.password);
+			const idToken = await user.getIdToken();
+			cookies.set('auth', idToken, {
+				path: '/',
+				httpOnly: true,
+				sameSite: 'strict',
+				secure: process.env.NODE_ENV === 'production',
+				maxAge: 60 * 60 * 24 * 7 // 1 week
+			});
 		} catch (error) {
-			return fail(503, {
+			return fail(500, {
 				form,
 				apiError: {
 					code: error.code,
@@ -30,6 +38,6 @@ export const actions = {
 			});
 		}
 
-		throw redirect(301, '/app');
+		throw redirect(300, '/app');
 	}
 };

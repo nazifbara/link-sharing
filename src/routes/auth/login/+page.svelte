@@ -7,11 +7,28 @@
 
 	export let data: PageData;
 	export let form: ActionData;
-	const { form: sForm, errors, constraints } = superForm(data.form);
-	const apiError = form?.apiError;
+
+	let logging = false;
+
+	const {
+		form: sForm,
+		errors,
+		constraints,
+		enhance
+	} = superForm(data.form, {
+		onSubmit: () => {
+			logging = true;
+		},
+		onResult: (result) => {
+			console.log(result.result);
+
+			logging = false;
+		}
+	});
+	$: apiError = form?.apiError;
 </script>
 
-<AuthShell>
+<AuthShell {enhance}>
 	<svelte:fragment slot="heading">Login</svelte:fragment>
 	<svelte:fragment slot="description"
 		>Add your details below and get back into the app</svelte:fragment
@@ -72,7 +89,7 @@
 		</ul>
 	{/if}
 
-	<button class="btn variant-primary">Login</button>
+	<button disabled={logging} class="btn variant-primary">{logging ? 'Logging...' : 'Login'}</button>
 
 	<p>Don't have an account? <a class="link" href="/auth/sign-up">Create account</a></p>
 </AuthShell>
