@@ -18,7 +18,7 @@
   /* Button */
 
   .btn {
-    @apply rounded-lg heading-s p-3 transition-colors;
+    @apply rounded-lg heading-s p-3 transition-colors inline-block;
   }
 
   .btn[disabled] {

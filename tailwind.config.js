@@ -6,8 +6,11 @@ export default {
 			base: ['Instrument Sans', 'sans-serif']
 		},
 		container: {
-			padding: '2rem',
-			center: true
+			padding: '1.5rem',
+			center: true,
+			screens: {
+				xl: '1536px'
+			}
 		},
 		extend: {
 			colors: {

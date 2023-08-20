@@ -4,7 +4,7 @@
 	export let enhance: (arg) => void = () => {};
 </script>
 
-<div class="grid items-start pt-8 min-h-[100svh] md:content-center">
+<div class="grid items-start pt-8 min-h-[100svh] md:content-center container">
 	<div class="grid items-center gap-14 w-full max-w-[476px] mx-auto">
 		<LogoLarge />
 

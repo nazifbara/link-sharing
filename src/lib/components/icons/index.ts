@@ -1,3 +1,4 @@
+export { default as LogoSmall } from './LogoSmall.svelte';
 export { default as LogoLarge } from './LogoLarge.svelte';
 export { default as ArrowRight } from './ArrowRight.svelte';
 export { default as ChangesSaved } from './ChangesSaved.svelte';
