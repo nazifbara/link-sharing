@@ -8,7 +8,7 @@ import { login } from '$lib/utils/client.js';
 export const load = async () => {
 	const form = await superValidate(loginSchema);
 
-	return { form, apiError: undefined, user: undefined };
+	return { form, apiError: null };
 };
 
 export const actions = {
@@ -16,7 +16,7 @@ export const actions = {
 		const form = await superValidate(request, loginSchema);
 
 		if (!form.valid) {
-			return fail(400, { form, apiError: undefined, user: undefined });
+			return fail(400, { form, apiError: null });
 		}
 
 		try {
@@ -30,12 +30,18 @@ export const actions = {
 				maxAge: 60 * 60 * 24 * 7 // 1 week
 			});
 		} catch (error: any) {
+			console.log(error.code);
+
+			if (['auth/user-not-found', 'auth/wrong-password'].includes(error.code)) {
+				return fail(400, {
+					form,
+					apiError: 'Your email or password is incorrect. Please try again.'
+				});
+			}
+
 			return fail(500, {
 				form,
-				apiError: {
-					code: error.code,
-					message: error.message
-				}
+				apiError: 'Something went wrong. Please try again.'
 			});
 		}
 

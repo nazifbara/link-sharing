@@ -73,7 +73,7 @@
 	{#if $errors._errors || apiError}
 		<ul class="text-danger">
 			{#if apiError}
-				<li>Something went wrong. Please try again.</li>
+				<li>{apiError}</li>
 			{/if}
 
 			{#if $errors._errors}

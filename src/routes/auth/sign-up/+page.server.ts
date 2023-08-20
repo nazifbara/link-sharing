@@ -22,7 +22,6 @@ export const actions = {
 		try {
 			await signUp(form.data.email, form.data.password);
 		} catch (error: any) {
-			console.log(error.code, error.message);
 			if (error.code === 'auth/email-already-in-use') {
 				return fail(400, {
 					form,
@@ -30,7 +29,7 @@ export const actions = {
 				});
 			}
 
-			return fail(503, {
+			return fail(500, {
 				form,
 				apiError: 'There was an error registering. Please try again.'
 			});
