@@ -16,15 +16,10 @@
 		constraints,
 		enhance
 	} = superForm(data.form, {
-		onSubmit: () => {
-			logging = true;
-		},
-		onResult: (result) => {
-			console.log(result.result);
-
-			logging = false;
-		}
+		onSubmit: () => (logging = true),
+		onResult: () => (logging = false)
 	});
+
 	$: apiError = form?.apiError;
 </script>
 

@@ -7,11 +7,22 @@
 
 	export let data: PageData;
 	export let form: ActionData;
-	const { form: sForm, errors, constraints } = superForm(data.form);
-	const apiError = form?.apiError;
+
+	let registering = false;
+	const {
+		form: sForm,
+		errors,
+		constraints,
+		enhance
+	} = superForm(data.form, {
+		onSubmit: () => (registering = true),
+		onResult: () => (registering = false)
+	});
+
+	$: apiError = form?.apiError;
 </script>
 
-<AuthShell>
+<AuthShell {enhance}>
 	<svelte:fragment slot="heading">Create account</svelte:fragment>
 	<svelte:fragment slot="description">Let's get you started sharing your links!</svelte:fragment>
 
@@ -91,7 +102,9 @@
 		</ul>
 	{/if}
 
-	<button class="btn variant-primary">Create new account</button>
+	<button disabled={registering} class="btn variant-primary">
+		{registering ? 'Registering...' : 'Create new account'}
+	</button>
 
 	<p>Already have an account? <a class="link" href="/auth/login">Login</a></p>
 </AuthShell>

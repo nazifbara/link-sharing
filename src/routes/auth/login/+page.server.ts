@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 
@@ -28,7 +29,7 @@ export const actions = {
 				secure: process.env.NODE_ENV === 'production',
 				maxAge: 60 * 60 * 24 * 7 // 1 week
 			});
-		} catch (error) {
+		} catch (error: any) {
 			return fail(500, {
 				form,
 				apiError: {

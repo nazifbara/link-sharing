@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 
@@ -20,7 +21,7 @@ export const actions = {
 
 		try {
 			await signUp(form.data.email, form.data.password);
-		} catch (error) {
+		} catch (error: any) {
 			return fail(503, {
 				form,
 				apiError: {
