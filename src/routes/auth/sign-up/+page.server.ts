@@ -8,7 +8,7 @@ import { signUp } from '$lib/utils/client.js';
 export const load = async () => {
 	const form = await superValidate(signUpSchema);
 
-	return { form, apiError: undefined };
+	return { form, apiError: null };
 };
 
 export const actions = {
@@ -16,18 +16,23 @@ export const actions = {
 		const form = await superValidate(request, signUpSchema);
 
 		if (!form.valid) {
-			return fail(400, { form, apiError: undefined });
+			return fail(400, { form, apiError: null });
 		}
 
 		try {
 			await signUp(form.data.email, form.data.password);
 		} catch (error: any) {
+			console.log(error.code, error.message);
+			if (error.code === 'auth/email-already-in-use') {
+				return fail(400, {
+					form,
+					apiError: 'This email is already in use'
+				});
+			}
+
 			return fail(503, {
 				form,
-				apiError: {
-					code: error.code,
-					message: error.message
-				}
+				apiError: 'There was an error registering. Please try again.'
 			});
 		}
 
