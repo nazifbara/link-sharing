@@ -30,8 +30,6 @@ export const actions = {
 				maxAge: 60 * 60 * 24 * 7 // 1 week
 			});
 		} catch (error: any) {
-			console.log(error.code);
-
 			if (['auth/user-not-found', 'auth/wrong-password'].includes(error.code)) {
 				return fail(400, {
 					form,
