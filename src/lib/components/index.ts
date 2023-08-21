@@ -2,4 +2,4 @@ export { default as AuthShell } from './AuthShell.svelte';
 export { default as PlatformField } from './PlatformField.svelte';
 export { default as Label } from './Label.svelte';
 export { default as TextField } from './TextField.svelte';
-export * as icons from './icons';
+export { default as Icon } from './Icon.svelte';

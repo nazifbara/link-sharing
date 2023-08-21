@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 
 	import type { ActionData, PageData } from './$types';
-	import { Email, Password } from '$lib/components/icons';
+	import { Icon } from '$lib/components';
 	import { Label, TextField, AuthShell } from '$lib/components';
 
 	export let data: PageData;
@@ -38,7 +38,7 @@
 			{...$constraints.email}
 		>
 			<svelte:fragment slot="icon">
-				<Email />
+				<Icon name="Email" />
 			</svelte:fragment>
 
 			<span slot="error">
@@ -59,7 +59,7 @@
 			{...$constraints.password}
 		>
 			<svelte:fragment slot="icon">
-				<Password />
+				<Icon name="Password" />
 			</svelte:fragment>
 
 			<span slot="error">
