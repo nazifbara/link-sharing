@@ -44,6 +44,6 @@ export const actions = {
 			});
 		}
 
-		throw redirect(300, '/app');
+		throw redirect(303, '/app');
 	}
 };

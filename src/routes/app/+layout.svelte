@@ -42,6 +42,6 @@
 	</div>
 </nav>
 
-<main class="container">
+<main class="container pb-6">
 	<slot />
 </main>

@@ -35,6 +35,6 @@ export const actions = {
 			});
 		}
 
-		throw redirect(301, '/auth/login');
+		throw redirect(303, '/auth/login');
 	}
 };

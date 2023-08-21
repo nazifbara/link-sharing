@@ -9,6 +9,16 @@
 }
 
 @layer components {
+  /* Card */
+
+  .card {
+    @apply p-6 rounded-xl bg-surface;
+  }
+
+  .card.variant-inner {
+    @apply p-5 bg-body
+  }
+
   /* Link */
 
   .link {
