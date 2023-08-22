@@ -1,17 +1,33 @@
 <script lang="ts">
-	import { Label, TextField, PlatformField } from '$lib/components';
-	import { Icon } from '$lib/components';
+	import Sortable from 'sortablejs';
+
+	import { Label, TextField, PlatformField, Icon } from '$lib/components';
 	import type { IconName } from '$lib/utils/types';
 
-	let links: { platform: IconName; url: string }[] = [];
+	let links: { id: string; platform: IconName; url: string }[] = [];
 
-	const addNewLink = () => {
-		links = [...links, { platform: 'Link', url: '' }];
-	};
+	function dnd(node: HTMLElement) {
+		Sortable.create(node, {
+			animation: 150,
+			handle: '.handle',
+			ghostClass: 'sortable-ghost',
+			onEnd: ({ oldIndex, newIndex, item }) => {
+				item.classList.remove('shadow-base');
 
-	const removeLink = (index: number) => {
+				if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
+					[links[oldIndex], links[newIndex]] = [links[newIndex], links[oldIndex]];
+				}
+			}
+		});
+	}
+
+	function addNewLink() {
+		links = [...links, { id: `linkId-${links.length}`, platform: 'Link', url: '' }];
+	}
+
+	function removeLink(index: number) {
 		links = [...links.slice(0, index), ...links.slice(index + 1)];
-	};
+	}
 </script>
 
 <div class="lg:grid lg:gap-6 lg:grid-cols-[2fr_3fr]">
@@ -28,15 +44,14 @@
 		<button class="btn variant-secondary w-full mb-6" on:click={addNewLink}>+ Add new Link</button>
 
 		{#if links[0]}
-			<form method="post" class="grid gap-6">
-				{#each links as link, i}
+			<form method="post" class="grid gap-6" use:dnd>
+				{#each links as link, i (link.id)}
 					<div class="card variant-inner">
 						<div class="flex items-center justify-between">
-							<button type="button" class="flex gap-2 items-center cursor-grab font-bold mb-3">
+							<button type="button" class="flex gap-2 items-center cursor-grab font-bold handle">
 								<Icon name="DragAndDrop" />
 								{`Link ${i + 1}`}
 							</button>
-
 							<button type="button" on:click={() => removeLink(i)}> Remove </button>
 						</div>
 						<PlatformField bind:value={link.platform} name={`link-${i}-platform`} />
@@ -76,3 +91,9 @@
 		>
 	</section>
 </div>
+
+<style lang="postcss">
+	:global(.sortable-ghost) {
+		@apply border border-primary-base;
+	}
+</style>

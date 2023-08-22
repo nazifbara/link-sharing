@@ -25,11 +25,7 @@ export const firebaseAdminConfig = {
 	clientEmail: SECRET_FIREBASE_CLIENT_EMAIL
 };
 
-let firebaseApp;
-
-if (!getApps().length) {
-	firebaseApp = initializeApp(firebaseConfig, '1');
-}
+const firebaseApp = initializeApp(firebaseConfig, { name: 'clientApp' });
 
 const firebaseAuth = getAuth(firebaseApp);
 

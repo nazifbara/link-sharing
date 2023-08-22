@@ -13,8 +13,8 @@ const firebaseAdminConfig = {
 
 let firebaseAdminApp;
 
-if (!getApps().length) {
-	firebaseAdminApp = initializeApp({ credential: cert(firebaseAdminConfig) });
+if (!getApps()) {
+	firebaseAdminApp = initializeApp({ credential: cert(firebaseAdminConfig) }, 'adminApp');
 }
 
 export const firebaseAdminAuth = getAdminAuth(firebaseAdminApp);
