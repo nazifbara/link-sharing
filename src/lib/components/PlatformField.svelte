@@ -10,7 +10,7 @@
 
 	const {
 		elements: { trigger, menu, option, label },
-		states: { valueLabel, open },
+		states: { valueLabel, open, value: selectValue },
 		helpers: { isSelected }
 	} = createSelect({
 		forceVisible: true,
@@ -31,7 +31,9 @@
 		'Twitch'
 	];
 
-	$: value = $valueLabel as string;
+	value ? ($selectValue = value) : (value = $selectValue);
+
+	$: value = $selectValue;
 	$: selectedPlatformIconName = $valueLabel as IconName;
 </script>
 

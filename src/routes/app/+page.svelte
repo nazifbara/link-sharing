@@ -1,10 +1,13 @@
 <script lang="ts">
 	import Sortable from 'sortablejs';
+	import { superForm } from 'sveltekit-superforms/client';
 
 	import { Label, TextField, PlatformField, Icon } from '$lib/components';
-	import type { IconName } from '$lib/utils/types';
+	import type { PageData } from './$types';
 
-	let links: { id: string; platform: IconName; url: string }[] = [];
+	export let data: PageData;
+
+	const { form: sForm } = superForm(data.form, { dataType: 'json' });
 
 	function dnd(node: HTMLElement) {
 		Sortable.create(node, {
@@ -15,18 +18,27 @@
 				item.classList.remove('shadow-base');
 
 				if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
-					[links[oldIndex], links[newIndex]] = [links[newIndex], links[oldIndex]];
+					sForm.update((value) => {
+						[value.links[oldIndex], value.links[newIndex]] = [
+							value.links[newIndex],
+							value.links[oldIndex]
+						];
+						return { ...value };
+					});
 				}
 			}
 		});
 	}
 
 	function addNewLink() {
-		links = [...links, { id: `linkId-${links.length}`, platform: 'Link', url: '' }];
+		$sForm.links = [
+			...$sForm.links,
+			{ id: `linkid-${$sForm.links.length}`, platform: 'Link', url: '' }
+		];
 	}
 
 	function removeLink(index: number) {
-		links = [...links.slice(0, index), ...links.slice(index + 1)];
+		$sForm.links = [...$sForm.links.slice(0, index), ...$sForm.links.slice(index + 1)];
 	}
 </script>
 
@@ -43,9 +55,9 @@
 
 		<button class="btn variant-secondary w-full mb-6" on:click={addNewLink}>+ Add new Link</button>
 
-		{#if links[0]}
+		{#if $sForm.links[0]}
 			<form method="post" class="grid gap-6" use:dnd>
-				{#each links as link, i (link.id)}
+				{#each $sForm.links as link, i (link.id)}
 					<div class="card variant-inner">
 						<div class="flex items-center justify-between">
 							<button type="button" class="flex gap-2 items-center cursor-grab font-bold handle">
@@ -54,12 +66,12 @@
 							</button>
 							<button type="button" on:click={() => removeLink(i)}> Remove </button>
 						</div>
-						<PlatformField bind:value={link.platform} name={`link-${i}-platform`} />
+						<PlatformField bind:value={$sForm.links[i].platform} name={`link-${i}-platform`} />
 
 						<Label label="Link">
 							<TextField
-								bind:value={link.url}
-								placeholder={link.platform && `${link.platform} profile URL`}
+								bind:value={$sForm.links[i].url}
+								placeholder={$sForm.links[i].platform && `${$sForm.links[i].platform} profile URL`}
 								name={`link-${i}-url`}
 							>
 								<svelte:fragment slot="icon">

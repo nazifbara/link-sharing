@@ -6,8 +6,7 @@ import {
 	PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 	PUBLIC_FIREBASE_APP_ID
 } from '$env/static/public';
-import { SECRET_FIREBASE_PRIVATE_KEY, SECRET_FIREBASE_CLIENT_EMAIL } from '$env/static/private';
-import { initializeApp, getApps } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -17,12 +16,6 @@ const firebaseConfig = {
 	storageBucket: PUBLIC_FIREBASE_STORAGE_BUCKET,
 	messagingSenderId: PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 	appId: PUBLIC_FIREBASE_APP_ID
-};
-
-export const firebaseAdminConfig = {
-	projectId: PUBLIC_FIREBASE_PROJECT_ID,
-	privateKey: SECRET_FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-	clientEmail: SECRET_FIREBASE_CLIENT_EMAIL
 };
 
 const firebaseApp = initializeApp(firebaseConfig, { name: 'clientApp' });

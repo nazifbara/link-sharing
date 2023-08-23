@@ -2,7 +2,7 @@ import { PUBLIC_FIREBASE_PROJECT_ID } from '$env/static/public';
 import { SECRET_FIREBASE_PRIVATE_KEY, SECRET_FIREBASE_CLIENT_EMAIL } from '$env/static/private';
 import type { RequestEvent } from '@sveltejs/kit';
 
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { initializeApp, cert } from 'firebase-admin/app';
 import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 
 const firebaseAdminConfig = {
@@ -11,11 +11,7 @@ const firebaseAdminConfig = {
 	clientEmail: SECRET_FIREBASE_CLIENT_EMAIL
 };
 
-let firebaseAdminApp;
-
-if (!getApps()) {
-	firebaseAdminApp = initializeApp({ credential: cert(firebaseAdminConfig) }, 'adminApp');
-}
+const firebaseAdminApp = initializeApp({ credential: cert(firebaseAdminConfig) }, 'adminApp');
 
 export const firebaseAdminAuth = getAdminAuth(firebaseAdminApp);
 
