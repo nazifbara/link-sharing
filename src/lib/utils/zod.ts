@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { isValidURL } from '$lib/utils/helpers';
+
 export const signUpSchema = z
 	.object({
 		email: z.string().email(),
@@ -18,12 +20,17 @@ export const loginSchema = z.object({
 export const linksSchema = z.object({
 	links: z
 		.array(
-			z.object({
-				id: z.string().min(1),
-				platform: z.string().min(1),
-				url: z.string().url().min(1)
-			})
+			z
+				.object({
+					id: z.string().min(1),
+					platform: z.string().min(1),
+					url: z.string().url().min(1)
+				})
+				.refine(({ platform, url }) => isValidURL(platform, url), {
+					message: 'Please check the URL'
+				})
 		)
+		.min(1)
 		.default([
 			{ id: 'linkid-0', platform: 'GitHub', url: 'https://github.com/nazifbara' },
 			{ id: 'linkid-1', platform: 'YouTube', url: 'https://www.youtube.com/@TheMinimalistsPodcast' }

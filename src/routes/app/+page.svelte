@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import Sortable from 'sortablejs';
 	import { superForm } from 'sveltekit-superforms/client';
 
@@ -9,11 +8,11 @@
 
 	export let data: PageData;
 
-	const { form: sForm } = superForm(data.form, { dataType: 'json' });
+	const { form, errors, enhance } = superForm(data.form, { dataType: 'json' });
 
 	const platormColorsMap: Record<string, string> = {
 		GitHub: '#1A1A1A',
-		'Frontend Mentor': 'FFFFFF',
+		'Frontend Mentor': '#3E54A3',
 		Twitter: '#43B7E9',
 		LinkedIn: '#2D68FF',
 		YouTube: '#EE3939',
@@ -36,7 +35,7 @@
 				item.classList.remove('shadow-base');
 
 				if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
-					sForm.update((value) => {
+					form.update((value) => {
 						[value.links[oldIndex], value.links[newIndex]] = [
 							value.links[newIndex],
 							value.links[oldIndex]
@@ -51,16 +50,18 @@
 	const toIconName = (name: string) => name as IconName;
 
 	function addNewLink() {
-		$sForm.links = [
-			...$sForm.links,
-			{ id: `linkid-${$sForm.links.length}`, platform: 'Link', url: '' }
+		$form.links = [
+			...$form.links,
+			{ id: `linkid-${$form.links.length}`, platform: 'Link', url: '' }
 		];
 	}
 
 	function removeLink(index: number) {
-		$sForm.links = [...$sForm.links.slice(0, index), ...$sForm.links.slice(index + 1)];
+		$form.links = [...$form.links.slice(0, index), ...$form.links.slice(index + 1)];
 	}
 </script>
+
+<!-- <SuperDebug data={form} /> -->
 
 <div class="lg:grid lg:gap-6 lg:grid-cols-[2fr_3fr]">
 	<section class="card hidden lg:grid place-content-center h-[700px] sticky top-6">
@@ -70,8 +71,8 @@
 				class="absolute grid gap-5 bg-white left-[11%] right-[11%] top-[44%] overflow-y-scroll"
 				style:max-height="calc(5 * (44px + 20px))"
 			>
-				{#each $sForm.links as link}
-					<li class="">
+				{#each $form.links as link}
+					<li>
 						<a
 							href={link.url}
 							style:background-color={platormColorsMap[link.platform]}
@@ -100,10 +101,10 @@
 
 		<button class="btn variant-secondary w-full mb-6" on:click={addNewLink}>+ Add new Link</button>
 
-		{#if $sForm.links[0]}
-			<form method="post" class="grid gap-6" use:dnd>
-				{#each $sForm.links as link, i (link.id)}
-					<div class="card variant-inner">
+		{#if $form.links[0]}
+			<form method="POST" use:enhance class="grid gap-6" use:dnd>
+				{#each $form.links as link, i (link.id)}
+					<div class="card variant-inner grid gap-3">
 						<div class="flex items-center justify-between">
 							<button type="button" class="flex gap-2 items-center cursor-grab font-bold handle">
 								<Icon name="DragAndDrop" />
@@ -111,21 +112,34 @@
 							</button>
 							<button type="button" on:click={() => removeLink(i)}> Remove </button>
 						</div>
-						<PlatformField bind:value={$sForm.links[i].platform} name={`link-${i}-platform`} />
+						<PlatformField bind:value={$form.links[i].platform} name={`link-${i}-platform`} />
 
 						<Label label="Link">
 							<TextField
-								bind:value={$sForm.links[i].url}
-								placeholder={$sForm.links[i].platform && `${$sForm.links[i].platform} profile URL`}
+								bind:value={$form.links[i].url}
+								placeholder={$form.links[i].platform && `${$form.links[i].platform} profile URL`}
 								name={`link-${i}-url`}
+								variant={$errors.links && $errors.links[i] && 'error'}
 							>
 								<svelte:fragment slot="icon">
 									<Icon name="Link" />
 								</svelte:fragment>
+
+								<span slot="error">
+									{#if $errors.links && $errors.links[i]}
+										{$errors.links[i]}
+									{/if}
+								</span>
 							</TextField>
 						</Label>
 					</div>
 				{/each}
+
+				<hr
+					class="mt-6 mb-4 w-[calc(100%_+_48px)] translate-x-[-24px] border-border md:mt-10 md:mb-6 lg:w-[calc(100%_+_80px)] lg:translate-x-[-40px]"
+				/>
+
+				<button class="btn variant-primary block w-full md:w-[initial] md:ml-auto">Save</button>
 			</form>
 		{:else}
 			<div class="card variant-inner">
@@ -139,13 +153,6 @@
 				</div>
 			</div>
 		{/if}
-
-		<hr
-			class="mt-6 mb-4 w-[calc(100%_+_48px)] translate-x-[-24px] border-border md:mt-10 md:mb-6 lg:w-[calc(100%_+_80px)] lg:translate-x-[-40px]"
-		/>
-
-		<button disabled class="btn variant-primary block w-full md:w-[initial] md:ml-auto">Save</button
-		>
 	</section>
 	˚
 </div>

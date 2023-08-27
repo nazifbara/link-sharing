@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Icon } from '$lib/components';
 
-	export let enhance: (arg) => void = () => {};
+	export let enhance: (arg: any) => void = () => {};
 </script>
 
 <div class="grid items-start pt-8 min-h-[100svh] md:content-center container">
