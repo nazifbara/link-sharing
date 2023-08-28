@@ -3,12 +3,25 @@
 	import { superForm } from 'sveltekit-superforms/client';
 
 	import { Label, TextField, PlatformField, Icon } from '$lib/components';
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 	import type { IconName } from '$lib/utils/types';
 
 	export let data: PageData;
+	export let form: ActionData;
 
-	const { form, errors, enhance } = superForm(data.form, { dataType: 'json' });
+	let saving = false;
+
+	$: apiError = form?.apiError;
+
+	const {
+		form: sform,
+		errors,
+		enhance
+	} = superForm(data.form, {
+		dataType: 'json',
+		onSubmit: () => (saving = true),
+		onResult: () => (saving = false)
+	});
 
 	const platormColorsMap: Record<string, string> = {
 		GitHub: '#1A1A1A',
@@ -35,7 +48,7 @@
 				item.classList.remove('shadow-base');
 
 				if (oldIndex !== undefined && newIndex !== undefined && oldIndex !== newIndex) {
-					form.update((value) => {
+					sform.update((value) => {
 						[value.links[oldIndex], value.links[newIndex]] = [
 							value.links[newIndex],
 							value.links[oldIndex]
@@ -50,14 +63,14 @@
 	const toIconName = (name: string) => name as IconName;
 
 	function addNewLink() {
-		$form.links = [
-			...$form.links,
-			{ id: `linkid-${$form.links.length}`, platform: 'Link', url: '' }
+		$sform.links = [
+			...$sform.links,
+			{ id: `linkid-${$sform.links.length}`, platform: 'Link', url: '' }
 		];
 	}
 
 	function removeLink(index: number) {
-		$form.links = [...$form.links.slice(0, index), ...$form.links.slice(index + 1)];
+		$sform.links = [...$sform.links.slice(0, index), ...$sform.links.slice(index + 1)];
 	}
 </script>
 
@@ -71,7 +84,7 @@
 				class="absolute grid gap-5 bg-white left-[11%] right-[11%] top-[44%] overflow-y-scroll"
 				style:max-height="calc(5 * (44px + 20px))"
 			>
-				{#each $form.links as link}
+				{#each $sform.links as link}
 					<li>
 						<a
 							href={link.url}
@@ -101,9 +114,9 @@
 
 		<button class="btn variant-secondary w-full mb-6" on:click={addNewLink}>+ Add new Link</button>
 
-		{#if $form.links[0]}
+		{#if $sform.links[0]}
 			<form method="POST" use:enhance class="grid gap-6" use:dnd>
-				{#each $form.links as link, i (link.id)}
+				{#each $sform.links as link, i (link.id)}
 					<div class="card variant-inner grid gap-3">
 						<div class="flex items-center justify-between">
 							<button type="button" class="flex gap-2 items-center cursor-grab font-bold handle">
@@ -112,12 +125,12 @@
 							</button>
 							<button type="button" on:click={() => removeLink(i)}> Remove </button>
 						</div>
-						<PlatformField bind:value={$form.links[i].platform} name={`link-${i}-platform`} />
+						<PlatformField bind:value={$sform.links[i].platform} name={`link-${i}-platform`} />
 
 						<Label label="Link">
 							<TextField
-								bind:value={$form.links[i].url}
-								placeholder={$form.links[i].platform && `${$form.links[i].platform} profile URL`}
+								bind:value={$sform.links[i].url}
+								placeholder={$sform.links[i].platform && `${$sform.links[i].platform} profile URL`}
 								name={`link-${i}-url`}
 								variant={$errors.links && $errors.links[i] && 'error'}
 							>
@@ -139,7 +152,13 @@
 					class="mt-6 mb-4 w-[calc(100%_+_48px)] translate-x-[-24px] border-border md:mt-10 md:mb-6 lg:w-[calc(100%_+_80px)] lg:translate-x-[-40px]"
 				/>
 
-				<button class="btn variant-primary block w-full md:w-[initial] md:ml-auto">Save</button>
+				{#if apiError}
+					<span class="text-danger">{apiError}</span>
+				{/if}
+
+				<button disabled={saving} class="btn variant-primary block w-full md:w-[initial] md:ml-auto"
+					>{saving ? 'Saving...' : 'Save'}</button
+				>
 			</form>
 		{:else}
 			<div class="card variant-inner">

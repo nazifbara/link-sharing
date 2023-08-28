@@ -8,6 +8,7 @@ import {
 } from '$env/static/public';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
 	apiKey: PUBLIC_FIREBASE_API_KEY,
@@ -18,13 +19,24 @@ const firebaseConfig = {
 	appId: PUBLIC_FIREBASE_APP_ID
 };
 
-const firebaseApp = initializeApp(firebaseConfig, { name: 'clientApp' });
+const app = initializeApp(firebaseConfig, { name: 'clientApp' });
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const firebaseAuth = getAuth(firebaseApp);
+export async function saveLinks(links: { platform: string; url: string }[], userUID: string) {
+	return await Promise.all(
+		links.map((link) =>
+			addDoc(collection(db, 'links'), {
+				...link,
+				userUID
+			})
+		)
+	);
+}
 
 export const login = async (email: string, password: string) => {
-	return await signInWithEmailAndPassword(firebaseAuth, email, password);
+	return await signInWithEmailAndPassword(auth, email, password);
 };
 
 export const signUp = async (email: string, password: string) =>
-	await createUserWithEmailAndPassword(firebaseAuth, email, password);
+	await createUserWithEmailAndPassword(auth, email, password);
