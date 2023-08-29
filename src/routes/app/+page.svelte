@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { flip } from 'svelte/animate';
 	import Sortable from 'sortablejs';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { v4 as uuid } from 'uuid';
@@ -6,11 +7,10 @@
 	import { Label, TextField, PlatformField, Icon } from '$lib/components';
 	import type { ActionData, PageData } from './$types';
 	import type { IconName } from '$lib/utils/types';
+	import { fade, fly } from 'svelte/transition';
 
 	export let data: PageData;
 	export let form: ActionData;
-
-	const profile = data.profile;
 
 	let saving = false;
 
@@ -82,8 +82,8 @@
 				class="absolute grid gap-5 bg-white left-[11%] right-[11%] top-[44%] overflow-y-scroll"
 				style:max-height="calc(5 * (44px + 20px))"
 			>
-				{#each $sform.links as link}
-					<li>
+				{#each $sform.links as link (`mockup-${link.id}`)}
+					<li in:fly={{ x: 300 }} animate:flip={{ duration: 300 }}>
 						<a
 							href={link.url}
 							style:background-color={platormColorsMap[link.platform]}
