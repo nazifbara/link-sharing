@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getContext, onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import Sortable from 'sortablejs';
 	import { superForm } from 'sveltekit-superforms/client';
@@ -7,11 +8,12 @@
 	import { Label, TextField, PlatformField, Icon } from '$lib/components';
 	import type { ActionData, PageData } from './$types';
 	import type { IconName } from '$lib/utils/types';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
 	export let data: PageData;
 	export let form: ActionData;
 
+	const showToast = getContext<{ showToast: () => void }>('toast').showToast;
 	let saving = false;
 
 	$: apiError = form?.apiError;
@@ -19,11 +21,18 @@
 	const {
 		form: sform,
 		errors,
-		enhance
+		enhance,
+		tainted
 	} = superForm(data.form, {
 		dataType: 'json',
 		onSubmit: () => (saving = true),
-		onResult: () => (saving = false)
+		onResult: ({ result }) => {
+			saving = false;
+
+			if (result.type === 'success') {
+				showToast();
+			}
+		}
 	});
 
 	const platormColorsMap: Record<string, string> = {
@@ -154,7 +163,9 @@
 					<span class="text-danger">{apiError}</span>
 				{/if}
 
-				<button disabled={saving} class="btn variant-primary block w-full md:w-[initial] md:ml-auto"
+				<button
+					disabled={saving || !!!$tainted}
+					class="btn variant-primary block w-full md:w-[initial] md:ml-auto"
 					>{saving ? 'Saving...' : 'Save'}</button
 				>
 			</form>
@@ -171,7 +182,6 @@
 			</div>
 		{/if}
 	</section>
-	˚
 </div>
 
 <style lang="postcss">
