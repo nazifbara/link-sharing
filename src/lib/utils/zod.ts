@@ -31,8 +31,4 @@ export const linksSchema = z.object({
 				})
 		)
 		.min(1)
-		.default([
-			{ id: 'linkid-0', platform: 'GitHub', url: 'https://github.com/nazifbara' },
-			{ id: 'linkid-1', platform: 'YouTube', url: 'https://www.youtube.com/@TheMinimalistsPodcast' }
-		])
 });

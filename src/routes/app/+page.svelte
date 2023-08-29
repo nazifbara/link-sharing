@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Sortable from 'sortablejs';
 	import { superForm } from 'sveltekit-superforms/client';
+	import { v4 as uuid } from 'uuid';
 
 	import { Label, TextField, PlatformField, Icon } from '$lib/components';
 	import type { ActionData, PageData } from './$types';
@@ -8,6 +9,8 @@
 
 	export let data: PageData;
 	export let form: ActionData;
+
+	const profile = data.profile;
 
 	let saving = false;
 
@@ -63,18 +66,13 @@
 	const toIconName = (name: string) => name as IconName;
 
 	function addNewLink() {
-		$sform.links = [
-			...$sform.links,
-			{ id: `linkid-${$sform.links.length}`, platform: 'Link', url: '' }
-		];
+		$sform.links = [...$sform.links, { id: uuid(), platform: 'Link', url: '' }];
 	}
 
 	function removeLink(index: number) {
 		$sform.links = [...$sform.links.slice(0, index), ...$sform.links.slice(index + 1)];
 	}
 </script>
-
-<!-- <SuperDebug data={form} /> -->
 
 <div class="lg:grid lg:gap-6 lg:grid-cols-[2fr_3fr]">
 	<section class="card hidden lg:grid place-content-center h-[700px] sticky top-6">

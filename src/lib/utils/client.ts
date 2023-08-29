@@ -8,7 +8,19 @@ import {
 } from '$env/static/public';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import {
+	getFirestore,
+	collection,
+	addDoc,
+	query,
+	where,
+	getDocs,
+	getDoc,
+	updateDoc
+} from 'firebase/firestore';
+import type { DocumentReference, DocumentData } from 'firebase/firestore';
+
+import type { Link, Profile } from './types';
 
 const firebaseConfig = {
 	apiKey: PUBLIC_FIREBASE_API_KEY,
@@ -23,15 +35,34 @@ const app = initializeApp(firebaseConfig, { name: 'clientApp' });
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export async function saveLinks(links: { platform: string; url: string }[], userUID: string) {
-	return await Promise.all(
-		links.map((link) =>
-			addDoc(collection(db, 'links'), {
-				...link,
-				userUID
-			})
-		)
+export async function getProfile(userUID: string) {
+	let profile: DocumentReference<DocumentData, DocumentData> | undefined;
+	const docSnapshot = await getDocs(
+		query(collection(db, 'profiles'), where('userUID', '==', userUID))
 	);
+	if (docSnapshot.empty) {
+		profile = await addDoc(collection(db, 'profiles'), {
+			userUID,
+			firstName: '',
+			lastName: '',
+			links: []
+		});
+	} else {
+		docSnapshot.forEach((doc) => {
+			profile = doc.ref;
+		});
+	}
+
+	if (!profile) return;
+	const profileDoc = await getDoc(profile);
+
+	return { ref: profile, data: { id: profile.id, ...profileDoc.data() } as Profile };
+}
+
+export async function saveLinks(links: Link[], userUID: string) {
+	const profile = await getProfile(userUID);
+	if (!profile) return;
+	await updateDoc(profile.ref, { ...profile.data, links });
 }
 
 export const login = async (email: string, password: string) => {
