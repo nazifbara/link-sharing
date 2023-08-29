@@ -3,11 +3,11 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { fail } from '@sveltejs/kit';
 
 import { linksSchema } from '$lib/utils/zod';
-import { saveLinks, getProfile } from '$lib/utils/client.js';
+import { saveLinks } from '$lib/utils/client.js';
 import type { Link } from '$lib/utils/types.js';
 
-export const load = async ({ locals }) => {
-	const profile = (await getProfile(locals.user?.uid as string))?.data;
+export const load = async ({ parent }) => {
+	const { profile } = await parent();
 	const form = await superValidate({ links: [...(profile?.links as Link[])] }, linksSchema);
 
 	return { form, apiError: null, profile };
