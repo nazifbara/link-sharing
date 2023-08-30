@@ -4,6 +4,27 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
+	let imageError: string | undefined;
+	let imagePreviewURL: string | undefined;
+	let uploading = false;
+
+	function handleImage(e: any) {
+		uploading = false;
+		imageError = undefined;
+		const image = new Image();
+		const file = e.target.files[0];
+		image.src = URL.createObjectURL(file);
+		image.onload = function () {
+			if (image.width * image.height >= 1024 * 1024) {
+				imageError = 'This image exceed 1024x1024px. Please select another image.';
+				return;
+			}
+
+			imagePreviewURL = image.src;
+			uploading = true;
+		};
+	}
 </script>
 
 <AppShell links={data.profile?.links}>
@@ -16,16 +37,25 @@
 		<div class="card variant-inner mb-6 grid md:grid-cols-3 md:items-center md:gap-3">
 			<h2 class="mb-4 md:mb-0">Profile picture</h2>
 			<label
-				class="grid place-content-center w-full max-w-[193px] aspect-square bg-primary-light cursor-pointer rounded-xl mb-6 md:mb-0"
+				style:background-image="url({imagePreviewURL ?? ''})"
+				class="relative overflow-hidden grid place-content-center w-full max-w-[193px] bg-cover bg-center aspect-square bg-primary-light cursor-pointer rounded-xl mb-6 md:mb-0"
 			>
-				<input type="file" hidden accept="image/png, image/jpeg" />
+				<input on:input={handleImage} type="file" hidden accept="image/png, image/jpeg" />
 				<div class="grid items-center justify-items-center">
 					<Icon name="UploadImage" />
 					<span class="heading-s text-primary-base">+ Upload Image</span>
 				</div>
+
+				{#if imagePreviewURL}
+					<div class="absolute inset-0 bg-black/50" />
+				{/if}
 			</label>
 
-			<p>Image must be below 1024x1024px. Use PNG or JPG format</p>
+			{#if imageError}
+				<p class="text-danger">{imageError}</p>
+			{:else}
+				<p>Image must be below 1024x1024px. Use PNG or JPG format</p>
+			{/if}
 		</div>
 
 		<div class="card variant-inner grid gap-3">
