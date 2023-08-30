@@ -114,7 +114,7 @@
 
 			<button
 				disabled={saving || !!!$tainted}
-				class="btn variant-primary block w-full md:w-[initial] md:ml-auto"
+				class="btn variant-primary block w-full md:w-[91px] md:ml-auto"
 				>{saving ? 'Saving...' : 'Save'}</button
 			>
 		</form>
