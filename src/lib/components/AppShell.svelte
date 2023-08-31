@@ -6,7 +6,7 @@
 	import type { IconName, Link } from '$lib/utils/types';
 
 	export let links: Link[] = [];
-	export let photoURL: string | undefined;
+	export let photoURL: string | null;
 
 	const platormColorsMap: Record<string, string> = {
 		GitHub: '#1A1A1A',

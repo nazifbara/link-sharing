@@ -8,7 +8,7 @@
 	export let data: PageData;
 
 	let imageError: string | undefined;
-	let imagePreviewURL: string | undefined = data.photoURL;
+	let imagePreviewURL: string | null = data.photoURL;
 	let uploading = false;
 
 	function handleImage(e: any) {
@@ -27,10 +27,14 @@
 			imagePreviewURL = image.src;
 			uploading = true;
 
-			const { ref } = await uploadPhoto(file);
-			await getPhotoURL(ref.fullPath);
-			await updateProfilePhoto(data.profile!.userUID, ref.fullPath);
-			invalidate('data:profile');
+			try {
+				const { ref } = await uploadPhoto(file);
+				await getPhotoURL(ref.fullPath);
+				await updateProfilePhoto(data.profile!.userUID, ref.fullPath);
+				invalidate('data:profile');
+			} catch (error) {
+				imageError = 'Unable to upload the image. Please try again.';
+			}
 			uploading = false;
 		};
 	}

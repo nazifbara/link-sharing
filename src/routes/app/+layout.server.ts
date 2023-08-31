@@ -6,6 +6,6 @@ export const load = async ({ locals, depends }) => {
 
 	return {
 		profile,
-		photoURL: profile?.photoPath ? await getPhotoURL(profile.photoPath) : undefined
+		photoURL: profile?.photoPath ? await getPhotoURL(profile.photoPath) : null
 	};
 };

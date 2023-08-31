@@ -45,7 +45,11 @@ export async function updateProfilePhoto(userUID: string, path: string) {
 }
 
 export async function getPhotoURL(path: string) {
-	return await getDownloadURL(ref(storage, path));
+	try {
+		return await getDownloadURL(ref(storage, path));
+	} catch (error) {
+		return null;
+	}
 }
 export async function uploadPhoto(file: File) {
 	const storageRef = ref(storage, `profile-photos/${uuid()}`);
