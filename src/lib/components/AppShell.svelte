@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
-	import { fly } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
 
 	import { Icon } from '$lib/components';
 	import type { IconName, Link } from '$lib/utils/types';
 
 	export let links: Link[] = [];
+	export let photoURL: string | undefined;
 
 	const platormColorsMap: Record<string, string> = {
 		GitHub: '#1A1A1A',
@@ -30,6 +31,17 @@
 	<section class="card hidden lg:grid place-content-center h-[700px] sticky top-6">
 		<div class="relative">
 			<img alt="" src="/assets/illustration-phone-mockup.svg" />
+
+			{#if photoURL}
+				{#key photoURL}
+					<div
+						transition:scale
+						class="bg-black grid place-content-center absolute w-[92px] aspect-square rounded-full border-4 border-primary-base translate-x-1/2 right-[50%] top-[10%] overflow-hidden"
+					>
+						<img src={photoURL} alt="" class="" />
+					</div>
+				{/key}
+			{/if}
 			<ul
 				class="absolute grid gap-5 bg-white left-[11%] right-[11%] top-[44%] overflow-y-scroll"
 				style:max-height="calc(5 * (44px + 20px))"

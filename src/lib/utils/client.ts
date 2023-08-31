@@ -6,6 +6,7 @@ import {
 	PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 	PUBLIC_FIREBASE_APP_ID
 } from '$env/static/public';
+import { v4 as uuid } from 'uuid';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import {
@@ -18,6 +19,7 @@ import {
 	getDoc,
 	updateDoc
 } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { DocumentReference, DocumentData } from 'firebase/firestore';
 
 import type { Link, Profile } from './types';
@@ -34,6 +36,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig, { name: 'clientApp' });
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+
+export async function updateProfilePhoto(userUID: string, path: string) {
+	const profile = await getProfile(userUID);
+	if (!profile) return;
+	await updateDoc(profile.ref, { ...profile.data, photoPath: path });
+}
+
+export async function getPhotoURL(path: string) {
+	return await getDownloadURL(ref(storage, path));
+}
+export async function uploadPhoto(file: File) {
+	const storageRef = ref(storage, `profile-photos/${uuid()}`);
+	return await uploadBytes(storageRef, file);
+}
 
 export async function getProfile(userUID: string) {
 	let profile: DocumentReference<DocumentData, DocumentData> | undefined;

@@ -62,7 +62,7 @@
 	}
 </script>
 
-<AppShell links={$sform.links}>
+<AppShell links={$sform.links} photoURL={data.photoURL}>
 	<svelte:fragment slot="heading">Customize your links</svelte:fragment>
 	<svelte:fragment slot="description">
 		Add/edit/remove links below and then share all your profiles with the world!

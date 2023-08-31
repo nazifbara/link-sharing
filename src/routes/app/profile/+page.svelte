@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation';
+	import { uploadPhoto, getPhotoURL, updateProfilePhoto } from '$lib/utils/client';
 	import { AppShell, Icon, TextField } from '$lib/components';
 	import Label from '$lib/components/Label.svelte';
 	import type { PageData } from './$types';
@@ -6,7 +8,7 @@
 	export let data: PageData;
 
 	let imageError: string | undefined;
-	let imagePreviewURL: string | undefined;
+	let imagePreviewURL: string | undefined = data.photoURL;
 	let uploading = false;
 
 	function handleImage(e: any) {
@@ -14,8 +16,9 @@
 		imageError = undefined;
 		const image = new Image();
 		const file = e.target.files[0];
+
 		image.src = URL.createObjectURL(file);
-		image.onload = function () {
+		image.onload = async function () {
 			if (image.width * image.height >= 1024 * 1024) {
 				imageError = 'This image exceed 1024x1024px. Please select another image.';
 				return;
@@ -23,11 +26,17 @@
 
 			imagePreviewURL = image.src;
 			uploading = true;
+
+			const { ref } = await uploadPhoto(file);
+			await getPhotoURL(ref.fullPath);
+			await updateProfilePhoto(data.profile!.userUID, ref.fullPath);
+			invalidate('data:profile');
+			uploading = false;
 		};
 	}
 </script>
 
-<AppShell links={data.profile?.links}>
+<AppShell links={data.profile?.links} photoURL={imagePreviewURL}>
 	<svelte:fragment slot="heading">Profile Details</svelte:fragment>
 	<svelte:fragment slot="description">
 		Add your details to create a personal touch to your profile
@@ -40,14 +49,31 @@
 				style:background-image="url({imagePreviewURL ?? ''})"
 				class="relative overflow-hidden grid place-content-center w-full max-w-[193px] bg-cover bg-center aspect-square bg-primary-light cursor-pointer rounded-xl mb-6 md:mb-0"
 			>
-				<input on:input={handleImage} type="file" hidden accept="image/png, image/jpeg" />
-				<div class="grid items-center justify-items-center">
+				<input
+					on:input={handleImage}
+					type="file"
+					hidden
+					accept="image/png, image/jpeg"
+					disabled={uploading}
+				/>
+				<div
+					class:[&_svg_path]:fill-white={imagePreviewURL}
+					class="grid items-center justify-items-center z-20"
+				>
 					<Icon name="UploadImage" />
-					<span class="heading-s text-primary-base">+ Upload Image</span>
+					<span class:text-white={imagePreviewURL} class="heading-s text-primary-base">
+						{#if uploading}
+							Uploading...
+						{:else if imagePreviewURL}
+							Change Image
+						{:else}
+							+ Upload Image
+						{/if}
+					</span>
 				</div>
 
 				{#if imagePreviewURL}
-					<div class="absolute inset-0 bg-black/50" />
+					<div class="absolute inset-0 bg-black/50 z-10" />
 				{/if}
 			</label>
 

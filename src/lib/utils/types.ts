@@ -11,6 +11,7 @@ export interface Link {
 export interface Profile {
 	id: string;
 	userUID: string;
+	photoPath?: string;
 	firstName: string;
 	lastName: string;
 	links: Link[];
