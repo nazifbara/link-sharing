@@ -7,6 +7,7 @@
 
 	export let links: Link[] = [];
 	export let photoURL: string | null;
+	export let profileDetails: { firstName: string; lastName: string; email: string };
 
 	const platormColorsMap: Record<string, string> = {
 		GitHub: '#1A1A1A',
@@ -42,6 +43,14 @@
 					</div>
 				{/key}
 			{/if}
+
+			<div class="bg-white absolute text-center top-[28%] left-[5%] right-[5%]">
+				<div class="text-contrast-dark font-bold text-lg">
+					{profileDetails.firstName}
+					{profileDetails.lastName}
+				</div>
+				<div>{profileDetails.email}</div>
+			</div>
 			<ul
 				class="absolute grid gap-5 bg-white left-[11%] right-[11%] top-[44%] overflow-y-scroll"
 				style:max-height="calc(5 * (44px + 20px))"

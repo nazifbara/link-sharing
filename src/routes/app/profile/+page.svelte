@@ -12,6 +12,7 @@
 	export let data: PageData;
 	export let form: ActionData;
 
+	const profile = data.profile as Profile;
 	let imageError: string | undefined;
 	let imagePreviewURL: string | null = data.photoURL;
 	let uploading = false;
@@ -68,7 +69,7 @@
 	}
 </script>
 
-<AppShell links={data.profile?.links} photoURL={imagePreviewURL}>
+<AppShell links={profile?.links} photoURL={imagePreviewURL} profileDetails={$sform}>
 	<svelte:fragment slot="heading">Profile Details</svelte:fragment>
 	<svelte:fragment slot="description">
 		Add your details to create a personal touch to your profile

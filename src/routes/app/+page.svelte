@@ -6,9 +6,12 @@
 
 	import { Label, TextField, PlatformField, Icon, AppShell } from '$lib/components';
 	import type { ActionData, PageData } from './$types';
+	import type { Profile } from '$lib/utils/types';
 
 	export let data: PageData;
 	export let form: ActionData;
+
+	const profile = data.profile as Profile;
 
 	const showToast = getContext<{ showToast: () => void }>('toast').showToast;
 	let saving = false;
@@ -62,7 +65,7 @@
 	}
 </script>
 
-<AppShell links={$sform.links} photoURL={data.photoURL}>
+<AppShell links={$sform.links} photoURL={data.photoURL} profileDetails={profile}>
 	<svelte:fragment slot="heading">Customize your links</svelte:fragment>
 	<svelte:fragment slot="description">
 		Add/edit/remove links below and then share all your profiles with the world!
