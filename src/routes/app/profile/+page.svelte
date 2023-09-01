@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms/client';
+
 	import { invalidate } from '$app/navigation';
 	import { uploadPhoto, getPhotoURL, updateProfilePhoto } from '$lib/utils/client';
 	import { AppShell, Icon, TextField } from '$lib/components';
@@ -6,6 +8,8 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
+	const { form: sform, errors, constraints, enhance } = superForm(data.form);
 
 	let imageError: string | undefined;
 	let imagePreviewURL: string | null = data.photoURL;
@@ -46,7 +50,7 @@
 		Add your details to create a personal touch to your profile
 	</svelte:fragment>
 
-	<form method="POST">
+	<form use:enhance method="POST">
 		<div class="card variant-inner mb-6 grid md:grid-cols-3 md:items-center md:gap-3">
 			<h2 class="mb-4 md:mb-0">Profile picture</h2>
 			<label
@@ -90,15 +94,51 @@
 
 		<div class="card variant-inner grid gap-3">
 			<Label horizontal label="First name*">
-				<TextField name="firstName" placeholder="e.g. John" />
+				<TextField
+					name="firstName"
+					placeholder="e.g. John"
+					variant={$errors.firstName && 'error'}
+					bind:value={$sform.firstName}
+					{...$constraints.firstName}
+				>
+					<span slot="error">
+						{#if $errors.firstName}
+							{$errors.firstName[0]}
+						{/if}
+					</span>
+				</TextField>
 			</Label>
 
 			<Label horizontal label="Last name*">
-				<TextField name="lastName" placeholder="e.g. Appleseed" />
+				<TextField
+					name="lastName"
+					placeholder="e.g. Appleseed"
+					variant={$errors.lastName && 'error'}
+					bind:value={$sform.lastName}
+					{...$constraints.lastName}
+				>
+					<span slot="error">
+						{#if $errors.lastName}
+							{$errors.lastName[0]}
+						{/if}
+					</span>
+				</TextField>
 			</Label>
 
 			<Label horizontal label="Email*">
-				<TextField name="email" placeholder="e.g. email@example.com" />
+				<TextField
+					name="email"
+					placeholder="e.g. email@example.com"
+					variant={$errors.email && 'error'}
+					bind:value={$sform.email}
+					{...$constraints.email}
+				>
+					<span slot="error">
+						{#if $errors.email}
+							{$errors.email[0]}
+						{/if}
+					</span>
+				</TextField>
 			</Label>
 		</div>
 

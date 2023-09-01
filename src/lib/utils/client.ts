@@ -72,9 +72,7 @@ export async function getProfile(userUID: string) {
 			links: []
 		});
 	} else {
-		docSnapshot.forEach((doc) => {
-			profile = doc.ref;
-		});
+		profile = docSnapshot.docs[0].ref;
 	}
 
 	if (!profile) return;

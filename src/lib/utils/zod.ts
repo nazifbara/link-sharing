@@ -32,3 +32,9 @@ export const linksSchema = z.object({
 		)
 		.min(1)
 });
+
+export const profileDetailsSchema = z.object({
+	firstName: z.string(),
+	lastName: z.string(),
+	email: z.string().email()
+});
