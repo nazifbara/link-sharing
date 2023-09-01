@@ -1,20 +1,42 @@
 <script lang="ts">
+	import { getContext } from 'svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 
 	import { invalidate } from '$app/navigation';
 	import { uploadPhoto, getPhotoURL, updateProfile, deletePhoto } from '$lib/utils/client';
 	import { AppShell, Icon, TextField } from '$lib/components';
 	import Label from '$lib/components/Label.svelte';
-	import type { PageData } from './$types';
+	import type { PageData, ActionData } from './$types';
 	import type { Profile } from '$lib/utils/types';
 
 	export let data: PageData;
-
-	const { form: sform, errors, constraints, enhance } = superForm(data.form);
+	export let form: ActionData;
 
 	let imageError: string | undefined;
 	let imagePreviewURL: string | null = data.photoURL;
 	let uploading = false;
+	let saving = false;
+
+	$: apiError = form?.apiError;
+
+	const showToast = getContext<{ showToast: () => void }>('toast').showToast;
+
+	const {
+		form: sform,
+		errors,
+		constraints,
+		enhance,
+		tainted
+	} = superForm(data.form, {
+		onSubmit: () => (saving = true),
+		onResult: ({ result }) => {
+			saving = false;
+
+			if (result.type === 'success') {
+				showToast();
+			}
+		}
+	});
 
 	function handleImage(e: any) {
 		uploading = false;
@@ -148,6 +170,14 @@
 			class="mt-6 mb-4 w-[calc(100%_+_48px)] translate-x-[-24px] border-border md:mt-10 md:mb-6 lg:w-[calc(100%_+_80px)] lg:translate-x-[-40px]"
 		/>
 
-		<button class="btn variant-primary block w-full md:w-[91px] md:ml-auto">Save</button>
+		{#if apiError}
+			<span class="text-danger">{apiError}</span>
+		{/if}
+
+		<button
+			disabled={saving || !!!$tainted}
+			class="btn variant-primary block w-full md:w-[91px] md:ml-auto"
+			>{saving ? 'Saving...' : 'Save'}</button
+		>
 	</form>
 </AppShell>

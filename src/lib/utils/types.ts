@@ -15,4 +15,5 @@ export interface Profile {
 	firstName: string;
 	lastName: string;
 	links: Link[];
+	email: string;
 }
