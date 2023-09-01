@@ -19,7 +19,7 @@ import {
 	getDoc,
 	updateDoc
 } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import type { DocumentReference, DocumentData } from 'firebase/firestore';
 
 import type { Link, Profile } from './types';
@@ -42,6 +42,9 @@ export async function updateProfilePhoto(userUID: string, path: string) {
 	const profile = await getProfile(userUID);
 	if (!profile) return;
 	await updateDoc(profile.ref, { ...profile.data, photoPath: path });
+	if (profile.data.photoPath) {
+		await deleteObject(ref(storage, profile.data.photoPath));
+	}
 }
 
 export async function getPhotoURL(path: string) {
