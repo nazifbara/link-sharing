@@ -22,7 +22,7 @@ import {
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import type { DocumentReference, DocumentData } from 'firebase/firestore';
 
-import type { Link, Profile } from './types';
+import type { Profile } from './types';
 
 const firebaseConfig = {
 	apiKey: PUBLIC_FIREBASE_API_KEY,
@@ -38,12 +38,15 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export async function updateProfilePhoto(userUID: string, path: string) {
+export async function updateProfile(userUID: string, data: Partial<Profile>) {
 	const profile = await getProfile(userUID);
 	if (!profile) return;
-	await updateDoc(profile.ref, { ...profile.data, photoPath: path });
-	if (profile.data.photoPath) {
-		await deleteObject(ref(storage, profile.data.photoPath));
+	await updateDoc(profile.ref, { ...profile.data, ...data });
+}
+
+export async function deletePhoto(profile: Profile) {
+	if (profile.photoPath) {
+		await deleteObject(ref(storage, profile.photoPath));
 	}
 }
 
@@ -79,12 +82,6 @@ export async function getProfile(userUID: string) {
 	const profileDoc = await getDoc(profile);
 
 	return { ref: profile, data: { id: profile.id, ...profileDoc.data() } as Profile };
-}
-
-export async function saveLinks(links: Link[], userUID: string) {
-	const profile = await getProfile(userUID);
-	if (!profile) return;
-	await updateDoc(profile.ref, { ...profile.data, links });
 }
 
 export const login = async (email: string, password: string) => {

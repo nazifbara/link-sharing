@@ -2,10 +2,11 @@
 	import { superForm } from 'sveltekit-superforms/client';
 
 	import { invalidate } from '$app/navigation';
-	import { uploadPhoto, getPhotoURL, updateProfilePhoto } from '$lib/utils/client';
+	import { uploadPhoto, getPhotoURL, updateProfile, deletePhoto } from '$lib/utils/client';
 	import { AppShell, Icon, TextField } from '$lib/components';
 	import Label from '$lib/components/Label.svelte';
 	import type { PageData } from './$types';
+	import type { Profile } from '$lib/utils/types';
 
 	export let data: PageData;
 
@@ -34,7 +35,8 @@
 			try {
 				const { ref } = await uploadPhoto(file);
 				await getPhotoURL(ref.fullPath);
-				await updateProfilePhoto(data.profile!.userUID, ref.fullPath);
+				await updateProfile(data.profile!.userUID, { photoPath: ref.fullPath });
+				await deletePhoto(data.profile as Profile);
 				invalidate('data:profile');
 			} catch (error) {
 				imageError = 'Unable to upload the image. Please try again.';

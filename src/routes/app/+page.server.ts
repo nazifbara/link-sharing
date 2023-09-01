@@ -3,7 +3,7 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { fail } from '@sveltejs/kit';
 
 import { linksSchema } from '$lib/utils/zod';
-import { saveLinks } from '$lib/utils/client.js';
+import { updateProfile } from '$lib/utils/client.js';
 import type { Link } from '$lib/utils/types.js';
 
 export const load = async ({ parent }) => {
@@ -21,7 +21,7 @@ export const actions = {
 			return fail(400, { form, apiError: null });
 		}
 		try {
-			await saveLinks(form.data.links, locals.user?.uid as string);
+			await updateProfile(locals.user?.uid as string, { links: form.data.links });
 			return { form, apiError: null };
 		} catch (error: any) {
 			console.log(error);
