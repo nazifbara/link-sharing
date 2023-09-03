@@ -20,7 +20,6 @@ import {
 	updateDoc
 } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import type { DocumentReference, DocumentData } from 'firebase/firestore';
 
 import type { Profile } from './types';
 
@@ -62,26 +61,42 @@ export async function uploadPhoto(file: File) {
 	return await uploadBytes(storageRef, file);
 }
 
-export async function getProfile(userUID: string) {
-	let profile: DocumentReference<DocumentData, DocumentData> | undefined;
-	const docSnapshot = await getDocs(
-		query(collection(db, 'profiles'), where('userUID', '==', userUID))
-	);
-	if (docSnapshot.empty) {
-		profile = await addDoc(collection(db, 'profiles'), {
-			userUID,
-			firstName: '',
-			lastName: '',
-			links: []
-		});
-	} else {
-		profile = docSnapshot.docs[0].ref;
-	}
+async function createProfile(userUID: string) {
+	const profile = await addDoc(collection(db, 'profiles'), {
+		userUID,
+		firstName: '',
+		lastName: '',
+		email: '',
+		photoPath: '',
+		links: []
+	});
 
-	if (!profile) return;
 	const profileDoc = await getDoc(profile);
 
 	return { ref: profile, data: { id: profile.id, ...profileDoc.data() } as Profile };
+}
+
+export async function getProfile(userUID: string) {
+	const docSnapshot = await getDocs(
+		query(collection(db, 'profiles'), where('userUID', '==', userUID))
+	);
+
+	if (docSnapshot.empty) {
+		return null;
+	}
+
+	const profile = await getDoc(docSnapshot.docs[0].ref);
+	return { ref: profile.ref, data: { id: profile.id, ...profile.data() } as Profile };
+}
+
+export async function getCreateProfile(userUID: string) {
+	const profile = await getProfile(userUID);
+
+	if (!profile) {
+		return await createProfile(userUID);
+	}
+
+	return profile;
 }
 
 export const login = async (email: string, password: string) => {

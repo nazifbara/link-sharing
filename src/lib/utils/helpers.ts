@@ -1,3 +1,5 @@
+import type { Profile } from './types';
+
 export function isValidURL(platform: string, url: string): boolean {
 	const pattern = {
 		GitHub: /^(https?:\/\/)?(www\.)?github\.com\/[a-zA-Z0-9_]{1,25}$/gim,
@@ -19,4 +21,17 @@ export function isValidURL(platform: string, url: string): boolean {
 	if (!pattern) return false;
 
 	return pattern.test(url);
+}
+
+export function getInitials(profile: Pick<Profile, 'firstName' | 'lastName'>) {
+	let initials = '';
+
+	if (profile.firstName) {
+		initials += profile.firstName[0].toLocaleUpperCase();
+	}
+	if (profile.lastName) {
+		initials += profile.lastName[0].toLocaleUpperCase();
+	}
+
+	return initials;
 }

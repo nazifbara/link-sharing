@@ -1,3 +1,5 @@
+export { default as PlatformLink } from './PlatformLink.svelte';
+export { default as Avatar } from './Avatar.svelte';
 export { default as AppShell } from './AppShell.svelte';
 export { default as AuthShell } from './AuthShell.svelte';
 export { default as PlatformField } from './PlatformField.svelte';
