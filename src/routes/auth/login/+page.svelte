@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
 
+	import { navigating } from '$app/stores';
 	import type { ActionData, PageData } from './$types';
 	import { Icon } from '$lib/components';
 	import { Label, TextField, AuthShell } from '$lib/components';
@@ -84,7 +85,9 @@
 		</ul>
 	{/if}
 
-	<button disabled={logging} class="btn variant-primary">{logging ? 'Logging...' : 'Login'}</button>
+	<button disabled={logging} class="btn variant-primary"
+		>{logging || $navigating ? 'Logging...' : 'Login'}</button
+	>
 
 	<p>Don't have an account? <a class="link" href="/auth/sign-up">Create account</a></p>
 </AuthShell>
