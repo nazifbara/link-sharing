@@ -20,7 +20,9 @@ export const authenticateUser = async (
 ): Promise<{ email?: string; uid: string } | null> => {
 	const { cookies } = event;
 
-	const idToken = cookies.get('auth') ?? '';
+	const idToken = cookies.get('auth');
+
+	if (!idToken) return null;
 
 	try {
 		const user = await firebaseAdminAuth.verifyIdToken(idToken);

@@ -26,7 +26,7 @@
 					aria-label={label}
 					class:[&_svg_path:first-child]:fill-primary-base={$page.url.pathname === path}
 					class:bg-primary-light={$page.url.pathname === path}
-					class="rounded-lg px-7 py-3 flex gap-2 items-center [&:hover>span]:text-primary-base [&:hover_svg_path:first-child]:fill-primary-base"
+					class="rounded-lg px-5 py-3 flex gap-2 items-center [&:hover>span]:text-primary-base [&:hover_svg_path:first-child]:fill-primary-base"
 				>
 					<Icon name={iconName} />
 					<span
@@ -37,10 +37,13 @@
 			{/each}
 		</div>
 
-		<a href="/{data.profile?.userUID}" aria-label="Preview" class="btn variant-secondary">
-			<span class="inline md:hidden"><Icon name="PreviewHeader" /></span>
-			<span class="hidden md:inline">Preview</span>
-		</a>
+		<div class="flex gap-4 items-center">
+			<a href="/{data.profile?.userUID}" aria-label="Preview" class="btn variant-secondary">
+				<span class="inline md:hidden"><Icon name="PreviewHeader" /></span>
+				<span class="hidden md:inline">Preview</span>
+			</a>
+			<a href="/auth/logout" class="text-danger text-sm font-bold">Logout</a>
+		</div>
 	</div>
 </nav>
 
