@@ -86,7 +86,7 @@
 	{/if}
 
 	<button disabled={logging} class="btn variant-primary"
-		>{logging || $navigating ? 'Logging...' : 'Login'}</button
+		>{logging || ($navigating && logging) ? 'Logging...' : 'Login'}</button
 	>
 
 	<p>Don't have an account? <a class="link" href="/auth/sign-up">Create account</a></p>
