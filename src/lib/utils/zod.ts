@@ -34,7 +34,7 @@ export const linksSchema = z.object({
 });
 
 export const profileDetailsSchema = z.object({
-	firstName: z.string().optional().default(''),
-	lastName: z.string().optional().default(''),
-	email: z.string().email().optional().default('')
+	firstName: z.string().default(''),
+	lastName: z.string().default(''),
+	email: z.string().email().default('')
 });

@@ -31,7 +31,7 @@ Users should be able to:
 
 ### Links
 
-- [Solution]()
+- [Solution](https://www.frontendmentor.io/solutions/linksharing-app-using-sveltekit-ELY3M9fSt0)
 - [Live Site](https://link-sharing-svelte.netlify.app/)
 
 ## Built with
